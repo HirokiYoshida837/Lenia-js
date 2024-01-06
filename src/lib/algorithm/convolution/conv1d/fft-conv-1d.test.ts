@@ -1,7 +1,5 @@
 import {describe, expect, it} from "vitest";
 import {fftCyclicConv1d, fftLinearConv1d} from "@/lib/algorithm/convolution/conv1d/fft-conv1d";
-import Enumerable from "linq";
-import {naiveCyclicConv1d} from "@/lib/algorithm/convolution/conv1d/naive-conv-1d";
 
 describe("fft-conv-1d", () => {
 

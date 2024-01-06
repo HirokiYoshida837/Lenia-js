@@ -1,6 +1,6 @@
 
 import Enumerable from "linq";
-import {Complex} from "@/lib/algorithm/fft/fft1d/complex";
+import {Complex} from "@/lib/algorithm/fft/common/complex";
 
 
 /**

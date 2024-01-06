@@ -3,7 +3,7 @@ import {naiveCyclicConv2d, naiveLinearConv2d} from "@/lib/algorithm/convolution/
 
 describe("naive-conv-2d", () => {
 
-  describe('naiveLinearConv1d', () => {
+  describe('naiveLinearConv2d', () => {
     it('線形畳み込みができることのテスト - 1', () => {
 
       const n = 4;
@@ -106,9 +106,43 @@ describe("naive-conv-2d", () => {
 
       expect(ret).toEqual(expected)
     })
+
+    it('線形畳み込みができることのテスト - 4', () => {
+
+      const n = 4;
+      const x = [
+        [1, 1, 1, 1],
+        [1, 2, 2, 1],
+        [1, 2, 2, 1],
+        [1, 1, 1, 1],
+      ];
+      const h = [
+        [0, 1, 0, 0],
+        [1, 0, 1, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0],
+      ];
+
+      const expected = [
+        [0, 1, 1, 1, 1, 0, 0, 0],
+        [1, 2, 4, 4, 2, 1, 0, 0],
+        [1, 4, 6, 6, 4, 1, 0, 0],
+        [1, 4, 6, 6, 4, 1, 0, 0],
+        [1, 2, 4, 4, 2, 1, 0, 0],
+        [0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+
+      const ret = naiveLinearConv2d(x, h, n)
+
+      console.log(ret)
+
+      expect(ret).toEqual(expected)
+    })
   })
 
-  describe('naiveCyclicConv1d', () => {
+  describe('naiveCyclicConv2d', () => {
     it('循環畳み込みができることのテスト - 1', () => {
 
       const n = 4;
