@@ -233,6 +233,36 @@ describe("naive-conv-2d", () => {
 
       expect(ret).toEqual(expected)
     })
+
+    it('循環畳み込みができることのテスト - 4', () => {
+
+      const n = 4;
+      const x = [
+        [1, 1, 1, 1],
+        [1, 2, 2, 1],
+        [1, 2, 2, 1],
+        [1, 1, 1, 1],
+      ];
+      const h = [
+        [0, 1, 0, 0],
+        [1, 0, 1, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 0],
+      ];
+
+      const expected = [
+        [4, 4, 5, 5],
+        [4, 4, 5, 5],
+        [5, 5, 6, 6],
+        [5, 5, 6, 6],
+      ]
+
+      const ret = naiveCyclicConv2d(x, h, n)
+
+      console.log(ret)
+
+      expect(ret).toEqual(expected)
+    })
   })
 
 });

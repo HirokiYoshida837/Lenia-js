@@ -34,15 +34,15 @@ describe("game-of-life", () => {
 
       const ret = calculator.calcNextGen(field);
 
-      console.log(`ret--- --- ---`)
-      for (let item of ret.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`expected--- --- ---`)
-      for (let item of expected.map(x => x.toString())) {
-        console.log(item)
-      }
+      // console.log(`ret--- --- ---`)
+      // for (let item of ret.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`expected--- --- ---`)
+      // for (let item of expected.map(x => x.toString())) {
+      //   console.log(item)
+      // }
 
       expect(ret).toEqual(expected)
     })
@@ -75,15 +75,15 @@ describe("game-of-life", () => {
 
       const ret = calculator.calcNextGen(field);
 
-      console.log(`ret--- --- ---`)
-      for (let item of ret.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`expected--- --- ---`)
-      for (let item of expected.map(x => x.toString())) {
-        console.log(item)
-      }
+      // console.log(`ret--- --- ---`)
+      // for (let item of ret.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`expected--- --- ---`)
+      // for (let item of expected.map(x => x.toString())) {
+      //   console.log(item)
+      // }
 
       expect(ret).toEqual(expected)
     })
@@ -117,20 +117,20 @@ describe("game-of-life", () => {
 
       const ret = calculator.calcNextGen(field);
 
-      console.log(`field--- --- ---`)
-      for (let item of field.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`ret--- --- ---`)
-      for (let item of ret.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`expected--- --- ---`)
-      for (let item of expected.map(x => x.toString())) {
-        console.log(item)
-      }
+      // console.log(`field--- --- ---`)
+      // for (let item of field.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`ret--- --- ---`)
+      // for (let item of ret.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`expected--- --- ---`)
+      // for (let item of expected.map(x => x.toString())) {
+      //   console.log(item)
+      // }
 
       expect(ret).toEqual(expected)
     })
@@ -163,20 +163,20 @@ describe("game-of-life", () => {
 
       const ret = calculator.calcNextGen(field);
 
-      console.log(`field--- --- ---`)
-      for (let item of field.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`ret--- --- ---`)
-      for (let item of ret.map(x => x.toString())) {
-        console.log(item)
-      }
-
-      console.log(`expected--- --- ---`)
-      for (let item of expected.map(x => x.toString())) {
-        console.log(item)
-      }
+      // console.log(`field--- --- ---`)
+      // for (let item of field.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`ret--- --- ---`)
+      // for (let item of ret.map(x => x.toString())) {
+      //   console.log(item)
+      // }
+      //
+      // console.log(`expected--- --- ---`)
+      // for (let item of expected.map(x => x.toString())) {
+      //   console.log(item)
+      // }
 
       expect(ret).toEqual(expected)
     })

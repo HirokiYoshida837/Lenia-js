@@ -28,17 +28,17 @@ describe("fft-2d", () => {
       .toArray()
 
     const fft2dRes = fft2d(l, a, false);
-    console.log(`---------------`)
-    const strings = Enumerable.from(fft2dRes).select(x => Enumerable.from(x).select(x => x.real).toArray()).toArray();
-    for (let item of strings) {
-      console.log(item.toString())
-    }
+    // console.log(`---------------`)
+    // const strings = Enumerable.from(fft2dRes).select(x => Enumerable.from(x).select(x => x.real).toArray()).toArray();
+    // for (let item of strings) {
+    //   console.log(item.toString())
+    // }
 
     const invertFft2dRes = fft2d(l, fft2dRes, true);
-    console.log(`---------------`)
-    for (let item of invertFft2dRes.map(x=>x.map(y=>y.getPowSq()).map(y=>Math.sqrt(y)))){
-      console.log(item.toString())
-    }
+    // console.log(`---------------`)
+    // for (let item of invertFft2dRes.map(x=>x.map(y=>y.getPowSq()).map(y=>Math.sqrt(y)))){
+    //   console.log(item.toString())
+    // }
 
 
   })
