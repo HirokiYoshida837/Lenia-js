@@ -25,6 +25,8 @@ export const initialFieldLenia = [
 // 中心を作るため、奇数マスになるようにする
 const createKernel = () => {
 
+  // R : 半径
+  // fieldサイズは R*2 + 1 になる。
   const R = 13;
 
   const dMatrix = calculateDistanceMatrix(R);
