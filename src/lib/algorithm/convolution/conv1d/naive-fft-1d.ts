@@ -1,3 +1,5 @@
+import Enumerable from "linq";
+
 /**
  * 周期 n の離散信号同士の線形(直線)畳み込みを行います。
  * ナイーブに処理を行うため、計算量は `O(n^2)`となっています。
@@ -18,13 +20,12 @@ export const naiveLinerConv1d = (f: number[], g: number[], n: number): number[] 
     throw new Error('Illegal argument. f size is not equal n')
   }
 
-  const ret = new Array<number>(2 * n)
-  for (let i = 0; i < ret.length; i++) {
-    ret[i] = 0
-  }
+  const ret = Enumerable.range(0, 2 * n)
+    .select(x => 0)
+    .toArray();
 
+  // ナイーブに畳み込み処理を計算する。計算量は O(n^2) となる。
   for (let i = 0; i < n; i++) {
-
     const fi = f[i]
     for (let j = 0; j < n; j++) {
       ret[i + j] += fi * g[j]
