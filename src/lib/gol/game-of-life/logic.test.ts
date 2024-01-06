@@ -1,7 +1,9 @@
 import {describe, expect, it} from "vitest";
-import {calcNextGen} from "@/lib/gol/game-of-life/logic";
+import {GameOfLifeCalculator} from "@/lib/gol/game-of-life/logic";
 
 describe("game-of-life", () => {
+
+  const calculator = new GameOfLifeCalculator(8);
 
   describe('#calcNextGen', () => {
     it('blinker', () => {
@@ -30,7 +32,7 @@ describe("game-of-life", () => {
       ]
 
 
-      const ret = calcNextGen(field, 8);
+      const ret = calculator.calcNextGen(field);
 
       console.log(`ret--- --- ---`)
       for (let item of ret.map(x => x.toString())) {
@@ -71,7 +73,7 @@ describe("game-of-life", () => {
       ]
 
 
-      const ret = calcNextGen(field, 8);
+      const ret = calculator.calcNextGen(field);
 
       console.log(`ret--- --- ---`)
       for (let item of ret.map(x => x.toString())) {
@@ -113,7 +115,7 @@ describe("game-of-life", () => {
       ]
 
 
-      const ret = calcNextGen(field, 8);
+      const ret = calculator.calcNextGen(field);
 
       console.log(`field--- --- ---`)
       for (let item of field.map(x => x.toString())) {
@@ -159,7 +161,7 @@ describe("game-of-life", () => {
       ]
 
 
-      const ret = calcNextGen(field, 8);
+      const ret = calculator.calcNextGen(field);
 
       console.log(`field--- --- ---`)
       for (let item of field.map(x => x.toString())) {

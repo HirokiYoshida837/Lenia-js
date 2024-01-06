@@ -6,7 +6,7 @@ import {Sketch} from "@p5-wrapper/react";
 import {SketchContainer} from "@/components/sketch-container";
 import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import Enumerable from "linq";
-import {calcNextGen, LeniaCalculator} from "@/lib/gol/lenia/logic";
+import {LeniaCalculator} from "@/lib/gol/lenia/logic";
 
 const canvasSize = {
   x: 8 * 64,
@@ -31,19 +31,14 @@ const Page: NextPage = () => {
     const leniaCalculator = new LeniaCalculator(kernel27x27, 0.15, 0.0185, 64);
 
 
-
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
       p5.frameRate(5)
-      // p5.noLoop()
     }
 
     p5.draw = () => {
-
       drawCanvas(p5, field)
-
       field = leniaCalculator.calcNextGen(field)
-      // field = calcNextGen(field, 64);
     }
   }
 

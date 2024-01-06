@@ -4,26 +4,29 @@ import {NextPage} from 'next';
 import p5Types from 'p5'
 import {Sketch} from "@p5-wrapper/react";
 import {SketchContainer} from "@/components/sketch-container";
-import {calcNextGen} from "@/lib/gol/game-of-life/logic";
+import {GameOfLifeCalculator} from "@/lib/gol/game-of-life/logic";
 
 const canvasSize = {
   x: 500,
   y: 500,
 };
 
-let field = [
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 1, 0, 0, 0, 0],
-  [0, 1, 0, 1, 0, 0, 0, 0],
-  [0, 0, 1, 1, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-]
 
 const Page: NextPage = () => {
   const sketch: Sketch = (p5: p5Types) => {
+
+    const calculator = new GameOfLifeCalculator(8);
+
+    let field = [
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0, 0, 0, 0],
+      [0, 1, 0, 1, 0, 0, 0, 0],
+      [0, 0, 1, 1, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0],
+    ]
 
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
@@ -33,7 +36,7 @@ const Page: NextPage = () => {
     p5.draw = () => {
 
       drawCanvas(p5, field)
-      field = calcNextGen(field, 8);
+      field = calculator.calcNextGen(field);
     }
   }
 
