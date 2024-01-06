@@ -56,6 +56,8 @@ export class LeniaCalculator implements GoLCalculator {
 
 /**
  * FFTによる畳み込みを利用したLeniaの実装
+ * <br/>
+ * 処理が重たくあまりフレームレートがでない
  */
 export class LeniaCalculatorByFFT implements GoLCalculator {
 
@@ -90,9 +92,10 @@ export class LeniaCalculatorByFFT implements GoLCalculator {
     const calculatedValue = fftCyclicConv2dByGivenFreqDomainKernel(field, this.freqDomainKernel, this.n);
 
     // フィールドをコピー
-    const nextGen = Enumerable.from(field)
-      .select(x => Enumerable.from(x).select(x => x).toArray())
-      .toArray()
+    // const nextGen = Enumerable.from(field)
+    //   .select(x => Enumerable.from(x).select(x => x).toArray())
+    //   .toArray()
+    const nextGen = field.map(x=>x.map(x=>x))
 
     // 計算結果から、次の世代を計算。
     for (let i = 0; i < this.n; i++) {

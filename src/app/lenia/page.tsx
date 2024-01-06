@@ -35,16 +35,18 @@ const Page: NextPage = () => {
     const leniaCalculator = new LeniaCalculatorByFFT(kernel27x27, 0.15, 0.0191, size);
     // const leniaCalculator = new LeniaCalculator(kernel27x27, 0.15, 0.0185, 64);
 
+    let loopCount = 0;
 
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
-      // p5.frameRate(5)
+      p5.frameRate(30)
     }
 
     p5.draw = () => {
-      console.log(p5.frameRate())
+      // console.log(p5.frameRate())
       drawCanvas(p5, field)
       field = leniaCalculator.calcNextGen(field)
+
     }
   }
 

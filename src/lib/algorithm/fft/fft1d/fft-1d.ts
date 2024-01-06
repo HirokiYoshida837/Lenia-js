@@ -14,7 +14,9 @@ import {Complex} from "@/lib/algorithm/fft/common/complex";
  */
 export function fft1d(sz: number, a: Complex[], inv = false): Complex[] {
 
-  const tmp = Enumerable.range(0, sz).select(x=>new Complex(0,0)).toArray()
+  // FIXME : linqを使わなくても楽にできるような方法を考えたい。
+  // const tmp = Enumerable.range(0, sz).select(x=>new Complex(0,0)).toArray()
+  const tmp: Complex[] = Array(sz).fill(new Complex(0, 0))
 
   const mask = sz - 1
   let p = 0

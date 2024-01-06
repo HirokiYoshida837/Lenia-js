@@ -101,23 +101,26 @@ export const fftCyclicConv2d = (f: number[][], g: number[][], n: number): number
  */
 export const fftCyclicConv2dByGivenFreqDomainKernel = (f: number[][], G: Complex[][], n: number): number[][] => {
 
-  if (f.length != n) {
-    throw new Error('Illegal argument. f.length is not equal n')
-  }
+  // memo : 速度重視するのでチェック処理を消す
+  // if (f.length != n) {
+  //   throw new Error('Illegal argument. f.length is not equal n')
+  // }
+  //
+  // if (!Enumerable.from(f).select(x => x.length == n).all(x => x)) {
+  //   throw new Error('Illegal argument. f is not n square matrix')
+  // }
+  //
+  // if (G.length != n) {
+  //   throw new Error('Illegal argument. f.length is not equal n')
+  // }
+  //
+  // if (!Enumerable.from(G).select(x => x.length == n).all(x => x)) {
+  //   throw new Error('Illegal argument. f is not n square matrix')
+  // }
 
-  if (!Enumerable.from(f).select(x => x.length == n).all(x => x)) {
-    throw new Error('Illegal argument. f is not n square matrix')
-  }
-
-  if (G.length != n) {
-    throw new Error('Illegal argument. f.length is not equal n')
-  }
-
-  if (!Enumerable.from(G).select(x => x.length == n).all(x => x)) {
-    throw new Error('Illegal argument. f is not n square matrix')
-  }
-
-  const fComp = Enumerable.from(f).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
+  // memo : 重たいのでLinqやめる
+  // const fComp = Enumerable.from(f).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
+  const fComp = f.map(x=>x.map(x=>new Complex(x,0)))
 
   const inputFFT = fft2d(n, fComp, false);
   // kernelは事前にFFT済。
@@ -139,12 +142,15 @@ export const fftCyclicConv2dByGivenFreqDomainKernel = (f: number[][], G: Complex
   // 逆FFTする
   const invFFTResult = fft2d(n, multComplex, true);
 
-  const ret = Enumerable.from(invFFTResult)
-    .select(x => Enumerable.from(x)
-      .select(x => x.getPowSq())
-      .select(x => Math.sqrt(x))
-      .toArray()
-    ).toArray();
+  // memo : 重たいのでLinqやめる
+  // const ret = Enumerable.from(invFFTResult)
+  //   .select(x => Enumerable.from(x)
+  //     .select(x => x.getPowSq())
+  //     .select(x => Math.sqrt(x))
+  //     .toArray()
+  //   ).toArray();
+
+  const ret = invFFTResult.map(x=>x.map(x=>x.getPowSq()).map(x=>Math.sqrt(x)))
 
   return ret;
 }
