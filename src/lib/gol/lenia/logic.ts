@@ -2,52 +2,76 @@ import Enumerable from "linq";
 import {bellCurve, initialKernel} from "@/lib/gol/lenia/constants";
 import {naiveCyclicConv2d} from "@/lib/algorithm/convolution/conv2d/naive-conv-2d";
 
-// const kernel4x4: readonly number[][] = [
-//   [0, 0, 0, 0],
-//   [0, 1, 1, 1],
-//   [0, 1, 0, 1],
-//   [0, 1, 1, 1],
-// ]
+export class LeniaCalculator {
+
+  kernel: number[][]
+  m: number
+  s: number
+  n: number
+
+  shiftedKernel: number[][];
+  growthFunc: (u: number) => number
+
+  constructor(kernel: number[][], m: number, s: number, n: number) {
+    this.kernel = kernel
+    this.m = m;
+    this.s = s;
+    this.n = n;
+
+    this.shiftedKernel = kernelExpandAndShift(kernel, n)
+    this.growthFunc = createGrowthFunc(m, s)
+
+  }
+
+  public calcNextGen(field: number[][]): number[][] {
+
+    // kernelとの畳み込み結果
+    const calculatedValue = naiveCyclicConv2d(field, this.shiftedKernel, this.n);
+
+    // フィールドをコピー
+    const nextGen = Enumerable.from(field)
+      .select(x => Enumerable.from(x).select(x => x).toArray())
+      .toArray()
+
+    // 計算結果から、次の世代を計算。
+    for (let i = 0; i < this.n; i++) {
+      for (let j = 0; j < this.n; j++) {
+        const diff = this.growthFunc(calculatedValue[i][j]) / 5
+
+        nextGen[i][j] = constraint(nextGen[i][j] + diff, 0, 1)
+      }
+    }
+
+    return nextGen
+  }
+
+
+}
+
 
 const kernel27x27 = initialKernel
 
-//         const convolved = convolution(stateA, props.kernel.kernelMatrix, 'wrap');
-//         // console.debug(`convolved`, convolved)
-//
-//         // 畳み込みの計算結果から、各セルが次のフレームでどうなっているかを計算。
-//         const diff = convolved.map(x => x.map(y => growth(y)))
-//             .map(x => x.map(y => y / T));
-//         // console.log(`diff`, diff)
-//
-//
-//         // update
-//         for (let i = 0; i < props.canvasInfo.gridSize.h; i++) {
-//             for (let j = 0; j < props.canvasInfo.gridSize.w; j++) {
-//
-//                 const value = diff[i][j];
-//                 stateA[i][j] = p5.constrain(stateA[i][j] + value, 0, 1);
-//             }
-//         }
 
-
-export const calcNextGen = (field: number[][], n: number): number[][] => {
-
+const kernelExpandAndShift = (originalKernel: number[][], n: number) => {
 
   // kernel を nのサイズに拡張する
   const kernel = Enumerable.range(0, n)
     .select(x => Enumerable.range(0, n).select(x => 0).toArray())
     .toArray()
 
-  for (let i = 0; i < 27; i++) {
-    for (let j = 0; j < 27; j++) {
+  // TODO : add assertion for kernel is square matrix
+  const originalKernelSize = originalKernel.length;
 
-      const di = Math.ceil(i - 27 / 2)
-      const dj = Math.ceil(j - 27 / 2)
+  for (let i = 0; i < originalKernelSize; i++) {
+    for (let j = 0; j < originalKernelSize; j++) {
+
+      const di = Math.ceil(i - originalKernelSize / 2)
+      const dj = Math.ceil(j - originalKernelSize / 2)
 
       // 中心をシフトする
       // https://wonderhorn.net/programming/negativeremainder.html
       // ((dividend % divisor) + divisor) % divisor;
-      console.log(`(i,j):`, {i, j}, `,\t (di,dj):`, {di, dj})
+      // console.log(`(i,j):`, {i, j}, `,\t (di,dj):`, {di, dj})
       const ti = ((di % n) + n) % n
       const tj = ((dj % n) + n) % n
 
@@ -55,6 +79,16 @@ export const calcNextGen = (field: number[][], n: number): number[][] => {
       kernel[ti][tj] = kernel27x27[i][j]
     }
   }
+
+  return kernel
+}
+
+
+export const calcNextGen = (field: number[][], n: number): number[][] => {
+
+
+  // kernel を nのサイズに拡張する
+  const kernel = kernelExpandAndShift(kernel27x27, n);
 
   //             growthM: 0.15,
   //             growthS: 0.0185,

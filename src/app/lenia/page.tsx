@@ -6,7 +6,7 @@ import {Sketch} from "@p5-wrapper/react";
 import {SketchContainer} from "@/components/sketch-container";
 import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import Enumerable from "linq";
-import {calcNextGen} from "@/lib/gol/lenia/logic";
+import {calcNextGen, LeniaCalculator} from "@/lib/gol/lenia/logic";
 
 const canvasSize = {
   x: 8 * 64,
@@ -15,18 +15,22 @@ const canvasSize = {
 
 const Page: NextPage = () => {
 
-  let field = Enumerable.range(0, 64)
-    .select(x => Enumerable.range(0, 64).select(x => 0).toArray())
-    .toArray()
-
-  for (let i = 0; i < initialFieldLenia.length; i++) {
-    for (let j = 0; j < initialFieldLenia[i].length; j++) {
-      field[i][j] = initialFieldLenia[i][j];
-    }
-  }
-
-
   const sketch: Sketch = (p5: p5Types) => {
+
+    let field = Enumerable.range(0, 64)
+      .select(x => Enumerable.range(0, 64).select(x => 0).toArray())
+      .toArray()
+
+    for (let i = 0; i < initialFieldLenia.length; i++) {
+      for (let j = 0; j < initialFieldLenia[i].length; j++) {
+        field[i][j] = initialFieldLenia[i][j];
+      }
+    }
+
+    const kernel27x27 = initialKernel
+    const leniaCalculator = new LeniaCalculator(kernel27x27, 0.15, 0.0185, 64);
+
+
 
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
@@ -37,7 +41,9 @@ const Page: NextPage = () => {
     p5.draw = () => {
 
       drawCanvas(p5, field)
-      field = calcNextGen(field, 64);
+
+      field = leniaCalculator.calcNextGen(field)
+      // field = calcNextGen(field, 64);
     }
   }
 
