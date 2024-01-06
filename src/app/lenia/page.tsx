@@ -6,19 +6,22 @@ import {Sketch} from "@p5-wrapper/react";
 import {SketchContainer} from "@/components/sketch-container";
 import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import Enumerable from "linq";
-import {LeniaCalculator} from "@/lib/gol/lenia/logic";
+import {LeniaCalculatorByFFT} from "@/lib/gol/lenia/logic";
+
+const size = 64;
 
 const canvasSize = {
-  x: 8 * 64,
-  y: 8 * 64,
+  // 1マス 8px x 64マス
+  x: 8 * size,
+  y: 8 * size,
 };
 
 const Page: NextPage = () => {
 
   const sketch: Sketch = (p5: p5Types) => {
 
-    let field = Enumerable.range(0, 64)
-      .select(x => Enumerable.range(0, 64).select(x => 0).toArray())
+    let field = Enumerable.range(0, size)
+      .select(x => Enumerable.range(0, size).select(x => 0).toArray())
       .toArray()
 
     for (let i = 0; i < initialFieldLenia.length; i++) {
@@ -28,15 +31,18 @@ const Page: NextPage = () => {
     }
 
     const kernel27x27 = initialKernel
-    const leniaCalculator = new LeniaCalculator(kernel27x27, 0.15, 0.0185, 64);
+
+    const leniaCalculator = new LeniaCalculatorByFFT(kernel27x27, 0.15, 0.0191, size);
+    // const leniaCalculator = new LeniaCalculator(kernel27x27, 0.15, 0.0185, 64);
 
 
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
-      p5.frameRate(5)
+      // p5.frameRate(5)
     }
 
     p5.draw = () => {
+      console.log(p5.frameRate())
       drawCanvas(p5, field)
       field = leniaCalculator.calcNextGen(field)
     }
@@ -53,8 +59,8 @@ const drawCanvas = (p5: p5Types, field: number[][]) => {
 
   p5.background(0);
 
-  const rectWidth = canvasSize.x / 64;
-  const rectHeight = canvasSize.y / 64;
+  const rectWidth = canvasSize.x / size;
+  const rectHeight = canvasSize.y / size;
 
   p5.push()
   p5.rectMode("center")
