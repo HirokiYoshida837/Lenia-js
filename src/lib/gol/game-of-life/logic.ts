@@ -33,46 +33,30 @@ export const calcNextGen = (field: number[][], n: number): number[][] => {
     }
   }
 
-  // for (let item of kernel.map(x => x.toString())) {
-  //   console.log(item)
-  // }
-
   // kernelとの畳み込み結果
   const calculatedValue = naiveCyclicConv2d(field, kernel, n);
 
-  for (let item of calculatedValue.map(x => x.toString())) {
-    console.log(item)
-  }
-
-  const nextGen = Enumerable.range(0, n)
-    .select(x => Enumerable.range(0, n).select(x => 0).toArray())
+  // フィールドをコピー
+  const nextGen = Enumerable.from(field)
+    .select(x => Enumerable.from(x).select(x => x).toArray())
     .toArray()
 
   // 計算結果から、次の世代を計算。
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-
-      const v = calculatedValue[i][j];
-      if (field[i][j] == 0) {
-        if (v == 3) {
-          // 誕生ケース
-          nextGen[i][j] = 1;
-        }
-      } else {
-        if (2 <= v && v < 4) {
-          // 生存ケース
-          nextGen[i][j] = 1;
-        } else if (v <= 1) {
-          // 過疎ケース
-          nextGen[i][j] = 0;
-        } else if (4 <= v) {
-          // 過密ケース
-          nextGen[i][j] = 0;
-        }
-      }
+      const diff = growth(calculatedValue[i][j])
+      nextGen[i][j] = constraint(nextGen[i][j] + diff, 0, 1)
     }
   }
 
-
   return nextGen
+}
+
+// 成長関数
+const growth = (u: number): number => {
+  return 0 + (u === 3 ? 1 : 0) - ((u < 2) || (u > 3) ? 1 : 0);
+}
+
+const constraint = (u: number, min: number, max: number): number => {
+  return Math.min(Math.max(u, min), max);
 }
