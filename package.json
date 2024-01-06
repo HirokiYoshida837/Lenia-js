@@ -13,10 +13,14 @@
     "linq": "^4.0.2",
     "next": "14.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "@p5-wrapper/next": "^1.0.1",
+    "@p5-wrapper/react": "^4.3.2",
+    "p5": "1.7.0"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/p5": "1.7.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
