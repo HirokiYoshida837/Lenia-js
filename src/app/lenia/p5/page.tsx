@@ -2,11 +2,12 @@
 
 import {NextPage} from 'next';
 import p5Types from 'p5'
+import {useRef} from "react";
 import {Sketch} from "@p5-wrapper/react";
-import {SketchContainer} from "@/components/sketch-container";
-import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import Enumerable from "linq";
+import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import {LeniaCalculatorByFFT} from "@/lib/gol/lenia/logic";
+import {SketchContainer} from "@/components/sketch-container";
 
 const size = 128;
 const gridSize = 8;
@@ -64,6 +65,7 @@ const Page: NextPage = () => {
       <SketchContainer sketch={sketch}/>
     </>
   );
+
 }
 
 const drawCanvas = (p5: p5Types, field: number[][]) => {
@@ -76,7 +78,7 @@ const drawCanvas = (p5: p5Types, field: number[][]) => {
       const v = field[i][j];
       const v1 = (v * 75 + 60) % 100;
       p5.stroke(v1, 100, 80)
-      p5.point(j,i)
+      p5.point(j, i)
     }
   }
 }
