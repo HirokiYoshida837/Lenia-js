@@ -1,5 +1,5 @@
 import {describe, it} from "vitest";
-import {fft1d} from "@/lib/algorithm/fft/fft1d/fft-1d";
+import {fft1d} from "@/lib/algorithm/fft/fft/fft1d/fft-1d";
 import {Complex} from "@/lib/algorithm/fft/common/complex";
 
 
@@ -9,7 +9,7 @@ describe("FFT test", () => {
 
   it("FFTの挙動確認", () => {
 
-    const fftRes = fft1d(a.length, a.map(x => new Complex(x, 0)), false);
+    const fftRes = fft1d(a.length, a.map(x => {return {real:x, imag:0}}), false);
     console.log(fftRes)
 
     const invertFFTRes = fft1d(a.length, fftRes, true);

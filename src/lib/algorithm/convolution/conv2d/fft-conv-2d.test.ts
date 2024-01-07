@@ -1,8 +1,7 @@
 import {describe, expect, it} from "vitest";
 import {fftCyclicConv2d, fftCyclicConv2dByGivenFreqDomainKernel} from "@/lib/algorithm/convolution/conv2d/fft-conv-2d";
-import {fft2d} from "@/lib/algorithm/fft/fft2d/fft-2d";
+import {fft2d} from "@/lib/algorithm/fft/fft/fft2d/fft-2d";
 import Enumerable from "linq";
-import {Complex} from "@/lib/algorithm/fft/common/complex";
 
 describe("fft-conv-2d", () => {
 
@@ -63,7 +62,9 @@ describe("fft-conv-2d", () => {
         [5, 5, 6, 6],
       ]
 
-      const freqDomainH = fft2d(4, Enumerable.from(h).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray(), false);
+      const freqDomainH = fft2d(4, Enumerable.from(h).select(x => Enumerable.from(x).select(x => {
+        return {real: x, imag: 0}
+      }).toArray()).toArray(), false);
       const ret = fftCyclicConv2dByGivenFreqDomainKernel(x, freqDomainH, n)
 
       console.log(ret)

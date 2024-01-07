@@ -1,6 +1,6 @@
 import Enumerable from "linq";
-import {fft2d} from "@/lib/algorithm/fft/fft2d/fft-2d";
-import {Complex} from "@/lib/algorithm/fft/common/complex";
+import {fft2d} from "@/lib/algorithm/fft/fft/fft2d/fft-2d";
+import {Complex, ComplexGetPowSq, ComplexMultiply} from "@/lib/algorithm/fft/common/complex";
 
 /**
  * 周期 n の離散信号(2次元)同士の線形畳み込み[Cyclic Convolution]を行います。
@@ -34,8 +34,8 @@ export const fftCyclicConv2d = (f: number[][], g: number[][], n: number): number
   //   .select(x => Enumerable.range(0, 2 * n).select(y => 0).toArray())
   //   .toArray();
 
-  const fComp = Enumerable.from(f).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
-  const gComp = Enumerable.from(g).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
+  const fComp = Enumerable.from(f).select(x => Enumerable.from(x).select(x => {return {real:x, imag:0}}).toArray()).toArray();
+  const gComp = Enumerable.from(g).select(x => Enumerable.from(x).select(x => {return {real:x, imag:0}}).toArray()).toArray();
 
   const inputFFT = fft2d(n, fComp, false);
   const kernelFFT = fft2d(n, gComp, false);
@@ -59,7 +59,8 @@ export const fftCyclicConv2d = (f: number[][], g: number[][], n: number): number
     const cps = new Array<Complex>();
 
     for (let j = 0; j < inputFFT.length; j++) {
-      const complex = inputFFT[i][j].multiply(kernelFFT[i][j]);
+      // const complex = inputFFT[i][j].multiply(kernelFFT[i][j]);
+      const complex = ComplexMultiply(inputFFT[i][j], kernelFFT[i][j])
       cps.push(complex);
     }
     multComplex.push(cps);
@@ -81,7 +82,7 @@ export const fftCyclicConv2d = (f: number[][], g: number[][], n: number): number
 
   const ret = Enumerable.from(invFFTResult)
     .select(x => Enumerable.from(x)
-      .select(x => x.getPowSq())
+      .select(x => ComplexGetPowSq(x))
       .select(x => Math.sqrt(x))
       .toArray()
     ).toArray();
@@ -101,56 +102,21 @@ export const fftCyclicConv2d = (f: number[][], g: number[][], n: number): number
  */
 export const fftCyclicConv2dByGivenFreqDomainKernel = (f: number[][], G: Complex[][], n: number): number[][] => {
 
-  // memo : 速度重視するのでチェック処理を消す
-  // if (f.length != n) {
-  //   throw new Error('Illegal argument. f.length is not equal n')
-  // }
-  //
-  // if (!Enumerable.from(f).select(x => x.length == n).all(x => x)) {
-  //   throw new Error('Illegal argument. f is not n square matrix')
-  // }
-  //
-  // if (G.length != n) {
-  //   throw new Error('Illegal argument. f.length is not equal n')
-  // }
-  //
-  // if (!Enumerable.from(G).select(x => x.length == n).all(x => x)) {
-  //   throw new Error('Illegal argument. f is not n square matrix')
-  // }
-
-  // memo : 重たいのでLinqやめる
-  // const fComp = Enumerable.from(f).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
-  const fComp = f.map(x=>x.map(x=>new Complex(x,0)))
-
-  const inputFFT = fft2d(n, fComp, false);
-  // kernelは事前にFFT済。
-  const kernelFFT = G
+  let fComp = f.map(x => x.map(x => {
+    return {real: x, imag: 0}
+  }))
+  fComp = fft2d(n, fComp, false);
 
   // 要素ごとの積(アダマール積)を取る
-  const multComplex = new Array<Array<Complex>>();
-  for (let i = 0; i < inputFFT.length; i++) {
-
-    const cps = new Array<Complex>();
-
-    for (let j = 0; j < inputFFT.length; j++) {
-      const complex = inputFFT[i][j].multiply(kernelFFT[i][j]);
-      cps.push(complex);
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+      // fComp[i][j] = fComp[i][j].multiply(G[i][j]);
+      fComp[i][j] = ComplexMultiply(fComp[i][j], G[i][j])
     }
-    multComplex.push(cps);
   }
 
   // 逆FFTする
-  const invFFTResult = fft2d(n, multComplex, true);
-
-  // memo : 重たいのでLinqやめる
-  // const ret = Enumerable.from(invFFTResult)
-  //   .select(x => Enumerable.from(x)
-  //     .select(x => x.getPowSq())
-  //     .select(x => Math.sqrt(x))
-  //     .toArray()
-  //   ).toArray();
-
-  const ret = invFFTResult.map(x=>x.map(x=>x.getPowSq()).map(x=>Math.sqrt(x)))
-
-  return ret;
+  fComp = fft2d(n, fComp, true);
+  f = fComp.map(x => x.map(x => Math.sqrt(ComplexGetPowSq(x))))
+  return f;
 }

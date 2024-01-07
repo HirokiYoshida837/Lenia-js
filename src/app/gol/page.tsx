@@ -30,7 +30,7 @@ const Page: NextPage = () => {
 
     p5.setup = () => {
       p5.createCanvas(canvasSize.x, canvasSize.y)
-      p5.frameRate(6)
+      // p5.frameRate(6)
     }
 
     p5.draw = () => {

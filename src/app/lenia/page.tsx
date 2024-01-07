@@ -8,13 +8,17 @@ import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import Enumerable from "linq";
 import {LeniaCalculatorByFFT} from "@/lib/gol/lenia/logic";
 
-const size = 64;
+const size = 128;
+const gridSize = 8;
 
 const canvasSize = {
   // 1マス 8px x 64マス
-  x: 8 * size,
-  y: 8 * size,
+  x: gridSize * size,
+  y: gridSize * size,
 };
+
+const rectWidth = canvasSize.x / size;
+const rectHeight = canvasSize.y / size;
 
 const Page: NextPage = () => {
 
@@ -38,15 +42,20 @@ const Page: NextPage = () => {
     let loopCount = 0;
 
     p5.setup = () => {
+      // https://himco.jp/2020/04/12/p5-js%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E6%9C%80%E9%81%A9%E5%8C%96/#FPS_%EF%BC%91%E7%A7%92%E5%BD%93%E3%81%9F%E3%82%8A%E3%81%AE%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E6%95%B0
+      p5.disableFriendlyErrors = true; // FESを無効化
       p5.createCanvas(canvasSize.x, canvasSize.y)
       p5.frameRate(30)
+      // p5.rectMode("center")
+      p5.colorMode('hsb', 100);
     }
 
     p5.draw = () => {
+      p5.scale(gridSize)
       // console.log(p5.frameRate())
-      drawCanvas(p5, field)
-      field = leniaCalculator.calcNextGen(field)
 
+      drawCanvas(p5, field)
+      leniaCalculator.calcNextGen(field)
     }
   }
 
@@ -61,32 +70,15 @@ const drawCanvas = (p5: p5Types, field: number[][]) => {
 
   p5.background(0);
 
-  const rectWidth = canvasSize.x / size;
-  const rectHeight = canvasSize.y / size;
-
-  p5.push()
-  p5.rectMode("center")
-
-  p5.colorMode('hsb', 100);
-  p5.background(0);
-
-
   for (let i = 0; i < field.length; i++) {
     for (let j = 0; j < field[i].length; j++) {
 
       const v = field[i][j];
-
       const v1 = (v * 75 + 60) % 100;
-
-      p5.fill(v1, 100, 80)
-
-      const x = j * rectWidth + rectWidth / 2;
-      const y = i * rectHeight + rectHeight / 2;
-      p5.rect(x, y, rectWidth, rectHeight);
-
+      p5.stroke(v1, 100, 80)
+      p5.point(j,i)
     }
   }
-  p5.pop()
 }
 
 

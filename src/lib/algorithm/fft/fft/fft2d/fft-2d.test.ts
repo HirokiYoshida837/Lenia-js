@@ -1,7 +1,5 @@
 import {describe, it} from "vitest";
-
-import {Complex} from "@/lib/algorithm/fft/common/complex";
-import {fft2d} from "@/lib/algorithm/fft/fft2d/fft-2d";
+import {fft2d} from "@/lib/algorithm/fft/fft/fft2d/fft-2d";
 import Enumerable from "linq";
 
 
@@ -24,7 +22,9 @@ describe("fft-2d", () => {
   it("fft2dの挙動確認", () => {
 
     const a = Enumerable.from(input)
-      .select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray())
+      .select(x => Enumerable.from(x).select(x => {
+        return {real: x, imag: 0}
+      }).toArray())
       .toArray()
 
     const fft2dRes = fft2d(l, a, false);

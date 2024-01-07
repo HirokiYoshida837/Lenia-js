@@ -1,6 +1,4 @@
-
-import Enumerable from "linq";
-import {Complex} from "@/lib/algorithm/fft/common/complex";
+import {Complex, ComplexAdd, ComplexDiv, ComplexMultiply, ComplexPolar} from "@/lib/algorithm/fft/common/complex";
 
 
 /**
@@ -14,9 +12,7 @@ import {Complex} from "@/lib/algorithm/fft/common/complex";
  */
 export function fft1d(sz: number, a: Complex[], inv = false): Complex[] {
 
-  // FIXME : linqを使わなくても楽にできるような方法を考えたい。
-  // const tmp = Enumerable.range(0, sz).select(x=>new Complex(0,0)).toArray()
-  const tmp: Complex[] = Array(sz).fill(new Complex(0, 0))
+  const tmp: Complex[] = Array(sz).fill({real: 0, imag: 0})
 
   const mask = sz - 1
   let p = 0
@@ -24,17 +20,17 @@ export function fft1d(sz: number, a: Complex[], inv = false): Complex[] {
   for (let i = sz >> 1; i >= 1; i >>= 1) {
     const cur = p & 1 ? tmp : a
     const nex = p & 1 ? a : tmp
-    const e = Complex.polar(1, (2 * Math.PI * i * (inv ? -1 : 1)) / sz)
-    let w = new Complex(1, 0)
+    const e = ComplexPolar(1, (2 * Math.PI * i * (inv ? -1 : 1)) / sz)
+    let w = {real: 1, imag: 0}
     for (let j = 0; j < sz; j += i) {
       for (let k = 0; k < i; k++) {
-        nex[j + k] = cur[((j << 1) & mask) + k].add(cur[(((j << 1) + i) & mask) + k].multiply(w))
+        nex[j+k] = ComplexAdd(cur[((j << 1) & mask) + k], ComplexMultiply(cur[(((j << 1) + i) & mask) + k],w))
       }
-      w = w.multiply(e)
+      w = ComplexMultiply(w,e)
     }
     p++
   }
   const r = p & 1 ? tmp : a
-  if (inv) for (let i = 0; i < sz; i++) r[i] = r[i].div(sz)
+  if (inv) for (let i = 0; i < sz; i++) r[i] = ComplexDiv(r[i], sz)
   return r
 }

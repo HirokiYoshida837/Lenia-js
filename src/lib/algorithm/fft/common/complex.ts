@@ -1,30 +1,39 @@
-export class Complex {
 
 
-  constructor(public real: number, public imag: number) {
-  }
+export type Complex = {
+  real: number;
+  imag: number
+}
 
-  multiply(complex: Complex) {
-
-    const r = this.real * complex.real - this.imag * complex.imag;
-    const i = this.real * complex.imag + this.imag * complex.real;
-
-    return new Complex(r, i);
-  }
-
-  add(complex: Complex){
-    return new Complex(this.real+complex.real, this.imag+complex.imag);
-  }
-
-  getPowSq() {
-    return this.real * this.real + this.imag * this.imag;
-  }
-
-  static polar(r: number, theta: number) {
-    return new Complex(r * Math.cos(theta), r * Math.sin(theta))
-  }
-
-  div(d: number) {
-    return new Complex(this.real / d, this.imag / d)
+export function ComplexAdd(a: Complex, b: Complex): Complex {
+  return {
+    real: a.real + b.real,
+    imag: a.imag + b.imag,
   }
 }
+
+export function ComplexDiv(a: Complex, d: number): Complex {
+  return {
+    real: a.real / d,
+    imag: a.imag / d,
+  }
+}
+
+export function ComplexMultiply(a: Complex, b: Complex): Complex {
+  return {
+    real: a.real * b.real - a.imag * b.imag,
+    imag: a.real * b.imag + a.imag * b.real,
+  }
+}
+
+export function ComplexGetPowSq(a: Complex): number {
+  return a.real * a.real + a.imag * a.imag;
+}
+
+export function ComplexPolar(r: number, theta: number): Complex {
+  return {
+    real: r * Math.cos(theta),
+    imag: r * Math.sin(theta)
+  }
+}
+

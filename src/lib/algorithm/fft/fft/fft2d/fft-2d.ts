@@ -1,5 +1,5 @@
 import {Complex} from "@/lib/algorithm/fft/common/complex";
-import {fft1d} from "@/lib/algorithm/fft/fft1d/fft-1d";
+import {fft1d} from "@/lib/algorithm/fft/fft/fft1d/fft-1d";
 
 
 export function fft2d(sz: number, a: Complex[][], inv = false): Complex[][] {
@@ -13,9 +13,7 @@ export function fft2d(sz: number, a: Complex[][], inv = false): Complex[][] {
     const irIn = transposeMatrix(transposeMatrix(a).map(x => fft1d(sz, x, true)))
 
     // 行方向の逆FFTをする
-    const rowIFFT = irIn.map(x => fft1d(sz, x, true));
-
-    return rowIFFT
+    return irIn.map(x => fft1d(sz, x, true));
 
   } else {
     /**
@@ -26,9 +24,7 @@ export function fft2d(sz: number, a: Complex[][], inv = false): Complex[][] {
     const rowFFT = a.map(x => fft1d(sz, x, false));
 
     // 列方向のFFTをする(FFTしやすいように転置して、そのあとに戻す)
-    const ret = transposeMatrix(transposeMatrix(rowFFT).map(x => fft1d(sz, x, false)));
-
-    return ret;
+    return transposeMatrix(transposeMatrix(rowFFT).map(x => fft1d(sz, x, false)));
   }
 
 }
@@ -39,15 +35,11 @@ export function fft2d(sz: number, a: Complex[][], inv = false): Complex[][] {
  */
 function transposeMatrix<T>(input: Array<Array<T>>): Array<Array<T>> {
 
-  const n = input.length;
-
-  const ret: Array<Array<T>> = new Array(n).fill([]).map(() => new Array(n).fill(null))
-
   for (let i = 0; i < input.length; i++) {
-    for (let j = 0; j < input.length; j++) {
-      ret[j][i] = input[i][j]
+    for (let j = i; j < input.length; j++) {
+      // ret[j][i] = input[i][j]
+      [input[i][j], input[j][i]] = [input[j][i], input[i][j]]
     }
   }
-
-  return ret;
+  return input
 }

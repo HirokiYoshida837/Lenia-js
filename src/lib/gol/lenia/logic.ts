@@ -1,11 +1,11 @@
 import Enumerable from "linq";
 import {bellCurve} from "@/lib/gol/lenia/constants";
 import {naiveCyclicConv2d} from "@/lib/algorithm/convolution/conv2d/naive-conv-2d";
-import {constraint, kernelExpandAndShift} from "@/lib/gol/common/utils";
+import {constraint, kernelExpand, kernelExpandAndShift} from "@/lib/gol/common/utils";
 import {GoLCalculator} from "@/lib/gol/common/type";
 import {fftCyclicConv2dByGivenFreqDomainKernel} from "@/lib/algorithm/convolution/conv2d/fft-conv-2d";
 import {Complex} from "@/lib/algorithm/fft/common/complex";
-import {fft2d} from "@/lib/algorithm/fft/fft2d/fft-2d";
+import {fft2d} from "@/lib/algorithm/fft/fft/fft2d/fft-2d";
 
 /**
  * ナイーブ畳み込みによるLeniaの実装
@@ -79,34 +79,26 @@ export class LeniaCalculatorByFFT implements GoLCalculator {
 
     // コンストラクタ内で前準備を行う。
     this.shiftedKernel = kernelExpandAndShift(kernel, n)
+    // this.shiftedKernel = kernelExpand(kernel, n)
 
-    const complex = Enumerable.from(this.shiftedKernel).select(x => Enumerable.from(x).select(x => new Complex(x, 0)).toArray()).toArray();
+    const complex = Enumerable.from(this.shiftedKernel).select(x => Enumerable.from(x).select(x => {return {real:x, imag:0}}).toArray()).toArray();
     this.freqDomainKernel = fft2d(n, complex, false);
 
     this.growthFunc = createGrowthFunc(m, s)
   }
 
-  public calcNextGen(field: number[][]): number[][] {
+  public calcNextGen(field: number[][]) {
 
     // kernelとの畳み込み結果
     const calculatedValue = fftCyclicConv2dByGivenFreqDomainKernel(field, this.freqDomainKernel, this.n);
-
-    // フィールドをコピー
-    // const nextGen = Enumerable.from(field)
-    //   .select(x => Enumerable.from(x).select(x => x).toArray())
-    //   .toArray()
-    const nextGen = field.map(x=>x.map(x=>x))
 
     // 計算結果から、次の世代を計算。
     for (let i = 0; i < this.n; i++) {
       for (let j = 0; j < this.n; j++) {
         const diff = this.growthFunc(calculatedValue[i][j]) / 5
-
-        nextGen[i][j] = constraint(nextGen[i][j] + diff, 0, 1)
+        field[i][j] = constraint(field[i][j] + diff, 0, 1)
       }
     }
-
-    return nextGen
   }
 }
 

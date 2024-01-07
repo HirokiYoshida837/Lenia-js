@@ -1,6 +1,6 @@
-import {fft1d} from "@/lib/algorithm/fft/fft1d/fft-1d";
+import {fft1d} from "@/lib/algorithm/fft/fft/fft1d/fft-1d";
 import Enumerable from "linq";
-import {Complex} from "@/lib/algorithm/fft/common/complex";
+import {ComplexMultiply} from "@/lib/algorithm/fft/common/complex";
 
 
 /**
@@ -19,15 +19,19 @@ export function fftLinearConv1d(a: number[], b: number[], n: number): number[] {
     throw new Error('illegal argument. size is invalid')
   }
 
-  let A = Enumerable.range(0, sz).select(x => new Complex(0, 0)).toArray()
-  let B = Enumerable.range(0, sz).select(x => new Complex(0, 0)).toArray()
+  let A = Enumerable.range(0, sz).select(x => {
+    return {real: 0, imag: 0}
+  }).toArray()
+  let B = Enumerable.range(0, sz).select(x => {
+    return {real: 0, imag: 0}
+  }).toArray()
 
 
-  for (let i = 0; i < a.length; i++) A[i] = new Complex(a[i], 0)
-  for (let i = 0; i < b.length; i++) B[i] = new Complex(b[i], 0)
+  for (let i = 0; i < a.length; i++) A[i] = {real: a[i], imag: 0}
+  for (let i = 0; i < b.length; i++) B[i] = {real: b[i], imag: 0}
   A = fft1d(sz, A)
   B = fft1d(sz, B)
-  for (let i = 0; i < sz; ++i) A[i] = A[i].multiply(B[i])
+  for (let i = 0; i < sz; ++i) A[i] = ComplexMultiply(A[i], B[i])
   A = fft1d(sz, A, true)
 
 
@@ -56,15 +60,19 @@ export function fftCyclicConv1d(a: number[], b: number[], n: number): number[] {
     throw new Error('illegal argument. size is invalid')
   }
 
-  let A = Enumerable.range(0, sz).select(x => new Complex(0, 0)).toArray()
-  let B = Enumerable.range(0, sz).select(x => new Complex(0, 0)).toArray()
+  let A = Enumerable.range(0, sz).select(x => {
+    return {real: 0, imag: 0}
+  }).toArray()
+  let B = Enumerable.range(0, sz).select(x => {
+    return {real: 0, imag: 0}
+  }).toArray()
 
 
-  for (let i = 0; i < a.length; i++) A[i] = new Complex(a[i], 0)
-  for (let i = 0; i < b.length; i++) B[i] = new Complex(b[i], 0)
+  for (let i = 0; i < a.length; i++) A[i] = {real: a[i], imag: 0}
+  for (let i = 0; i < b.length; i++) B[i] = {real: b[i], imag: 0}
   A = fft1d(sz, A)
   B = fft1d(sz, B)
-  for (let i = 0; i < sz; ++i) A[i] = A[i].multiply(B[i])
+  for (let i = 0; i < sz; ++i) A[i] = ComplexMultiply(A[i], B[i])
   A = fft1d(sz, A, true)
 
 

@@ -2,9 +2,9 @@ import {describe, it} from "vitest";
 import Enumerable from "linq";
 import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import {LeniaCalculator, LeniaCalculatorByFFT} from "@/lib/gol/lenia/logic";
-import {fft2d} from "@/lib/algorithm/fft/fft2d/fft-2d";
-import {kernelExpand, kernelExpandAndShift} from "@/lib/gol/common/utils";
-import {Complex} from "@/lib/algorithm/fft/common/complex";
+// import {fft2d} from "@/lib/algorithm/fft/fft/fft2d/fft-2d";
+// import {kernelExpand, kernelExpandAndShift} from "@/lib/gol/common/utils";
+// import {Complex} from "@/lib/algorithm/fft/common/complex";
 
 describe("lenia", () => {
 
@@ -36,38 +36,70 @@ describe("lenia", () => {
     })
   });
 
+  describe('#calcNextGen2', () => {
+    it('blinker', () => {
+      // refs : [ブリンカー (ライフゲーム) - Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%96%E3%83%AA%E3%83%B3%E3%82%AB%E3%83%BC_(%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B2%E3%83%BC%E3%83%A0))
 
-  describe('#kernel test', () => {
-    it('kernelの確認', () => {
+      leniaCalculatorFFT.calcNextGen(field);
 
-      const expandAndShift = kernelExpandAndShift(kernel27x27, 64)
       console.log(`ret--- --- ---`)
-      for (let item of expandAndShift) {
-        console.log(item.toString())
-      }
-
-      const map = expandAndShift.map(x => x.map(x => new Complex(x, 0)));
-
-      const fft2dRes = fft2d(64, map, false)
-      console.log(`ret--- --- ---`)
-      for (let item of fft2dRes.map(x => x.map(x=>x.real))) {
-        console.log(item.toString())
-      }
-
-      const kernelExpand1 = kernelExpand(kernel27x27, 64)
-      for (let item of kernelExpand1) {
-        console.log(item.toString())
-      }
-
-      const map2 = kernelExpand1.map(x => x.map(x => new Complex(x, 0)));
-      const fft2dRes2 = fft2d(64, map, false)
-      console.log(`ret--- --- ---`)
-      for (let item of fft2dRes2.map(x => x.map(x=>x.real))) {
-        console.log(item.toString())
+      for (let item of field.map(x => x.toString())) {
+        console.log(item)
       }
 
     })
   });
+
+
+  // describe('#kernel test', () => {
+  //   it('kernelExpandAndShift', () => {
+  //
+  //     const expandAndShift = kernelExpandAndShift(kernel27x27, 64)
+  //     console.log(`ret--- --- ---`)
+  //     for (let item of expandAndShift) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //     const map = expandAndShift.map(x => x.map(x => {return {real:x, imag:0}}));
+  //
+  //     const fft2dRes = fft2d(64, map, false)
+  //     console.log(`ret--- --- ---`)
+  //     for (let item of fft2dRes.map(x => x.map(x=>x.real))) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //     const invRes = fft2d(64, fft2dRes, true)
+  //
+  //     console.log(`ret--- --- ---`)
+  //     for (let item of invRes.map(x => x.map(x=>Math.sqrt(x.getPowSq())))) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //   })
+  //
+  //   it('kernelExpand', () => {
+  //
+  //     const kernelExpand1 = kernelExpand(kernel27x27, 64)
+  //     for (let item of kernelExpand1) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //     const map2 = kernelExpand1.map(x => x.map(x => new Complex(x, 0)));
+  //     const fft2dRes2 = fft2d(64, map2, false)
+  //     console.log(`ret--- --- ---`)
+  //     for (let item of fft2dRes2.map(x => x.map(x=>x.real))) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //     const invRes = fft2d(64, fft2dRes2, true)
+  //
+  //     console.log(`ret--- --- ---`)
+  //     for (let item of invRes.map(x => x.map(x=>Math.sqrt(x.getPowSq())))) {
+  //       console.log(item.toString())
+  //     }
+  //
+  //   })
+  // });
 
 });
 
