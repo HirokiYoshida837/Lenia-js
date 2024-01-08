@@ -6,8 +6,8 @@ import Enumerable from "linq";
 import {initialFieldLenia, initialKernel} from "@/lib/gol/lenia/constants";
 import {LeniaCalculatorByFFT} from "@/lib/gol/lenia/logic";
 
-const size = 128;
-const gridSize = 8;
+const size = 256;
+const gridSize = 4;
 
 const canvasSize = {
   // 1マス 8px x 64マス

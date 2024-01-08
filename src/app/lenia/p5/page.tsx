@@ -57,6 +57,7 @@ const Page: NextPage = () => {
 
       // p5.noLoop()
       p5.pixelDensity(1)
+      p5.loadPixels();
     }
 
     p5.draw = () => {
@@ -82,9 +83,8 @@ const Page: NextPage = () => {
  */
 const drawCanvas = (p5: p5Types, field: number[][]) => {
 
-  p5.background(0);
-
-  p5.loadPixels();
+  // p5.background(0);
+  // p5.loadPixels();
 
   // 渡されたfieldを描画する
   for (let y = 0; y < size; y++) {
