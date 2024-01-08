@@ -7,9 +7,6 @@
 
 ## pages 
 
-> [!warning]
-> `lenia with p5.js` page is heavily loaded. 
-
 - with canvas API
   - https://hirokiyoshida837.github.io/Lenia-js/lenia/canvas
 - with p5.js
